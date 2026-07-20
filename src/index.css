@@ -10,7 +10,13 @@
 
 /* Hide Clerk Development Mode Badges and Footer globally */
 .cl-developmentModeBadge,
-.cl-footer,
-div.cl-footer {
+.cl-footerAction,
+.cl-footerActionText,
+.cl-footerActionLink,
+.cl-internal-securesBy,
+.cl-securedBy,
+.cl-footerBox,
+.cl-cardBottom,
+.cl-footer {
   display: none !important;
 }
