@@ -138,7 +138,8 @@ export default function App() {
       <header className="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
+              <img src="/logo.jpg" alt="Argyle Medical Staffing Logo" className="h-12 w-auto object-contain" />
               <div className="flex flex-col justify-center">
                 <h1 className="text-[28px] font-serif font-bold text-[#001c40] leading-none">
                   Argyle
