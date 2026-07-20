@@ -36,8 +36,7 @@ export default function LoginPage() {
         <div className="bg-white/80 py-10 px-6 shadow-xl sm:rounded-2xl sm:px-12 border border-slate-200/60 backdrop-blur-xl">
           <div className="flex justify-center">
             <SignIn 
-              routing="path" 
-              path="/sign-in"
+              routing="hash" 
               appearance={{
                 elements: {
                   formButtonPrimary: 
