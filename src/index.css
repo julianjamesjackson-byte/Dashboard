@@ -11,11 +11,6 @@
 /* Hide Clerk Development Mode Badges and Footer globally */
 .cl-developmentModeBadge,
 .cl-footer,
-.cl-internal-b3al6g,
-.cl-internal-1dauvpw,
-div[class*="cl-internal"] > a[href*="clerk.dev"],
-div[class*="cl-internal"] > a[href*="clerk.com"],
-div:has(> a[href*="clerk.dev"]),
-div:has(> a[href*="clerk.com"]) {
+div.cl-footer {
   display: none !important;
 }
