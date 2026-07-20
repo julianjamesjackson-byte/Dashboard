@@ -326,30 +326,32 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse table-fixed">
               <thead>
                 <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50">
-                  <th className="py-4 px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Contact</th>
-                  <th className="py-4 px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Recent Activity</th>
-                  <th className="py-4 px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                  <th className="py-4 px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Time</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/3 sm:w-1/4">Contact</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/3 sm:w-auto">Recent Activity</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/3 sm:w-auto">Status</th>
+                  <th className="py-3 px-4 sm:py-4 sm:px-6 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right hidden sm:table-cell w-1/6">Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
                 {data.feed.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition-colors group">
-                    <td className="py-4 px-6 whitespace-nowrap">
-                      <div className="font-semibold text-slate-800 dark:text-slate-200">{item.name}</div>
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 align-top sm:align-middle">
+                      <div className="font-semibold text-slate-800 dark:text-slate-200 text-sm sm:text-base break-words leading-tight">{item.name}</div>
                     </td>
-                    <td className="py-4 px-6 text-slate-600 dark:text-slate-400">
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-slate-600 dark:text-slate-400 text-sm sm:text-base align-top sm:align-middle break-words">
                       {item.action}
                     </td>
-                    <td className="py-4 px-6 whitespace-nowrap">
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 align-top sm:align-middle">
                       <StatusBadge type={item.type} status={item.status} />
                     </td>
-                    <td className="py-4 px-6 whitespace-nowrap text-right text-sm text-slate-400 dark:text-slate-500 flex items-center justify-end gap-1.5">
-                      <Clock size={14} />
-                      {item.time}
+                    <td className="py-3 px-4 sm:py-4 sm:px-6 text-right text-sm text-slate-400 dark:text-slate-500 hidden sm:table-cell align-middle">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Clock size={14} />
+                        {item.time}
+                      </div>
                     </td>
                   </tr>
                 ))}
