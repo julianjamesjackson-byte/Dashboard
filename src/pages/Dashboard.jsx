@@ -146,7 +146,7 @@ export default function Dashboard() {
 
   const data = activeTab === 'facility' ? facilityData : candidateData;
 
-  const chartAxisColor = isDarkMode ? '#64748b' : '#94a3b8';
+  const chartAxisColor = isDarkMode ? '#cbd5e1' : '#64748b';
   const chartGridColor = isDarkMode ? '#334155' : '#e2e8f0';
   const chartTooltipBg = isDarkMode ? '#1e293b' : '#ffffff';
   const chartTooltipText = isDarkMode ? '#f8fafc' : '#0f172a';
@@ -263,6 +263,7 @@ export default function Dashboard() {
                   <YAxis yAxisId="right" orientation="right" stroke={chartAxisColor} fontSize={12} tickLine={false} axisLine={false} />
                   <RechartsTooltip 
                     contentStyle={{ backgroundColor: chartTooltipBg, color: chartTooltipText, borderRadius: '12px', border: '1px solid ' + chartGridColor, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
+                    itemStyle={{ color: chartTooltipText }}
                     cursor={{ stroke: chartAxisColor, strokeWidth: 1, strokeDasharray: '4 4' }}
                   />
                   <Line yAxisId="left" type="monotone" dataKey="emails" name="Emails Sent" stroke={chartAxisColor} strokeWidth={3} dot={false} activeDot={{ r: 6, fill: chartAxisColor }} />
@@ -297,6 +298,7 @@ export default function Dashboard() {
                   </Pie>
                   <RechartsTooltip 
                     contentStyle={{ backgroundColor: chartTooltipBg, color: chartTooltipText, borderRadius: '8px', border: '1px solid ' + chartGridColor, boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                    itemStyle={{ color: chartTooltipText }}
                   />
                   <Legend 
                     verticalAlign="bottom" 
