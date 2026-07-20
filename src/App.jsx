@@ -135,30 +135,29 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-brand-blue selection:text-white">
       {/* Header */}
-      <header className="bg-brand-navy text-white sticky top-0 z-50 border-b border-slate-800 shadow-xl">
+      <header className="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-cyan-400 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30">
-                <ActivitySquare size={24} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
-                  Argyle Medical Staffing
+              <div className="flex flex-col justify-center">
+                <h1 className="text-[28px] font-serif font-bold text-[#001c40] leading-none">
+                  Argyle
                 </h1>
-                <p className="text-xs text-slate-400 font-medium">Outreach & Campaign Intelligence</p>
+                <p className="text-[10px] font-sans tracking-[0.25em] text-[#337ab7] uppercase font-semibold mt-1">
+                  Medical Staffing
+                </p>
               </div>
             </div>
             
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-full border border-slate-700">
+              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100">
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                 </div>
-                <span className="text-xs font-semibold text-emerald-400 tracking-wide uppercase">Live Engine Active</span>
+                <span className="text-xs font-semibold text-emerald-700 tracking-wide uppercase">Live Engine Active</span>
               </div>
-              <div className="text-sm font-medium text-slate-300 bg-slate-800/80 px-4 py-2 rounded-xl tabular-nums border border-slate-700">
+              <div className="text-sm font-medium text-slate-600 bg-slate-100 px-4 py-2 rounded-xl tabular-nums border border-slate-200">
                 {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
               </div>
             </div>
