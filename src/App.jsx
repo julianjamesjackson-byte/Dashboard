@@ -11,9 +11,14 @@ export default function App() {
       <Route 
         path="/sign-in" 
         element={
-          <SignedOut>
-            <LoginPage />
-          </SignedOut>
+          <>
+            <SignedIn>
+              <Navigate to="/" replace />
+            </SignedIn>
+            <SignedOut>
+              <LoginPage />
+            </SignedOut>
+          </>
         } 
       />
       <Route 

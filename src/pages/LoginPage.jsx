@@ -37,6 +37,7 @@ export default function LoginPage() {
           <div className="flex justify-center">
             <SignIn 
               routing="hash" 
+              fallbackRedirectUrl="/"
               appearance={{
                 elements: {
                   formButtonPrimary: 
