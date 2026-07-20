@@ -7,3 +7,10 @@
     @apply bg-slate-50 text-slate-900;
   }
 }
+
+/* Hide Clerk Development Mode Badges globally */
+.cl-developmentModeBadge,
+div[class^="cl-internal"] > a[href*="clerk.dev"],
+div[class^="cl-internal"] > a[href*="clerk.com"] {
+  display: none !important;
+}
