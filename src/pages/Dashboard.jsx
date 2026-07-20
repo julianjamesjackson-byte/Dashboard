@@ -116,7 +116,7 @@ const StatusBadge = ({ type, status }) => {
   };
   
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${styles[type] || styles.opened}`}>
+    <span className={`px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap ${styles[type] || styles.opened}`}>
       {status}
     </span>
   );
@@ -342,7 +342,11 @@ export default function Dashboard() {
                       <div className="font-semibold text-slate-800 dark:text-slate-200 text-sm sm:text-base break-words leading-tight">{item.name}</div>
                     </td>
                     <td className="py-3 px-4 sm:py-4 sm:px-6 text-slate-600 dark:text-slate-400 text-sm sm:text-base align-top sm:align-middle break-words">
-                      {item.action}
+                      <div className="leading-tight">{item.action}</div>
+                      <div className="flex items-center gap-1 mt-1.5 sm:hidden text-[11px] text-slate-400 dark:text-slate-500">
+                        <Clock size={12} />
+                        {item.time}
+                      </div>
                     </td>
                     <td className="py-3 px-4 sm:py-4 sm:px-6 align-top sm:align-middle">
                       <StatusBadge type={item.type} status={item.status} />
