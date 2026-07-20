@@ -187,28 +187,28 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* Tabs */}
-        <div className="flex flex-col sm:flex-row gap-2 p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl w-full max-w-fit mx-auto sm:mx-0 shadow-inner backdrop-blur-sm">
+        <div className="flex flex-row gap-1 sm:gap-2 p-1 sm:p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl sm:rounded-2xl w-full sm:max-w-fit mx-auto sm:mx-0 shadow-inner backdrop-blur-sm">
           <button
             onClick={() => setActiveTab('facility')}
-            className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-[11px] sm:text-sm transition-all duration-300 ${
               activeTab === 'facility' 
                 ? 'bg-white dark:bg-slate-700 text-brand-navy dark:text-white shadow-sm border border-slate-200/50 dark:border-slate-600' 
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
             }`}
           >
-            <Building2 size={18} />
-            Facility Outreach (Clients)
+            <Building2 className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+            <span className="text-center leading-tight">Facility Outreach</span>
           </button>
           <button
             onClick={() => setActiveTab('candidate')}
-            className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-[11px] sm:text-sm transition-all duration-300 ${
               activeTab === 'candidate' 
                 ? 'bg-white dark:bg-slate-700 text-brand-navy dark:text-white shadow-sm border border-slate-200/50 dark:border-slate-600' 
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
             }`}
           >
-            <Users size={18} />
-            Candidate Outreach (Talent)
+            <Users className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+            <span className="text-center leading-tight">Candidate Outreach</span>
           </button>
         </div>
 
