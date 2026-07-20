@@ -6,7 +6,7 @@ import './index.css'
 import App from './App.jsx'
 
 // Import your Publishable Key
-const PUBLISHABLE_KEY = 'pk_test_bGVnaWJsZS1nbnUtNDkuY2xlcmsuYWNjb3VudHMuZGV2JA'
+const PUBLISHABLE_KEY = 'pk_test_YWxsb3dlZC1zd2lmdC0zOS5jbGVyay5hY2NvdW50cy5kZXYk'
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
