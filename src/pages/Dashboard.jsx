@@ -125,6 +125,8 @@ const StatusBadge = ({ type, status }) => {
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('facility');
   const [isFetching, setIsFetching] = useState(false);
+  const [lastSynced, setLastSynced] = useState(null);
+  const [syncStatus, setSyncStatus] = useState(null); // 'success' | 'error' | null
   const [dashboardData, setDashboardData] = useState({
     facility: facilityData,
     candidate: candidateData
@@ -147,22 +149,96 @@ export default function Dashboard() {
     }
   }, [isDarkMode]);
 
+  // Helper: safely extract a value from n8n data by checking multiple possible key names
+  const extractValue = (obj, ...keys) => {
+    if (!obj || typeof obj !== 'object') return undefined;
+    for (const key of keys) {
+      const lowerKey = key.toLowerCase();
+      const found = Object.keys(obj).find(k => k.toLowerCase() === lowerKey || k.toLowerCase().replace(/[\s_-]/g, '') === lowerKey.replace(/[\s_-]/g, ''));
+      if (found && obj[found] !== undefined && obj[found] !== null) return String(obj[found]);
+    }
+    return undefined;
+  };
+
+  // Transform whatever n8n sends into our dashboard format
+  const transformN8nData = (raw) => {
+    // If n8n wraps the response in an array, unwrap it
+    let data = Array.isArray(raw) ? raw[0] : raw;
+    if (!data || typeof data !== 'object') return null;
+
+    // If n8n already sends our exact format with facility/candidate keys, use it directly
+    if (data.facility && data.facility.kpis) {
+      return data;
+    }
+
+    // Otherwise, try to extract KPI values from a flat object
+    const kpis = {
+      emailsSent: extractValue(data, 'emailsSent', 'emails_sent', 'totalEmailsSent', 'total_emails_sent', 'emails') || '0',
+      activeLeads: extractValue(data, 'activeLeads', 'active_leads', 'leads') || '0',
+      openRate: extractValue(data, 'openRate', 'open_rate') || '0%',
+      replies: extractValue(data, 'replies', 'totalReplies', 'total_replies') || '0',
+      positiveReplyRate: extractValue(data, 'positiveReplyRate', 'positive_reply_rate', 'replyRate', 'reply_rate') || '0%',
+      meetingsBooked: extractValue(data, 'meetingsBooked', 'meetings_booked', 'meetings') || '0',
+      bounceRate: extractValue(data, 'bounceRate', 'bounce_rate', 'deliveryRate', 'delivery_rate') || '0%',
+    };
+
+    // Check if n8n sent trend data
+    const trendData = data.trendData || data.trend_data || data.trends || null;
+    // Check if n8n sent sentiment data
+    const sentimentData = data.sentimentData || data.sentiment_data || data.sentiment || null;
+    // Check if n8n sent feed data
+    const feedData = data.feed || data.activity || data.activities || data.liveFeed || data.live_feed || null;
+
+    return {
+      kpis,
+      ...(trendData && { trendData }),
+      ...(sentimentData && { sentimentData }),
+      ...(feedData && { feed: feedData }),
+    };
+  };
+
   const fetchN8nData = async () => {
     setIsFetching(true);
+    setSyncStatus(null);
     try {
       // Uses proxy: /api/n8n -> http://2.25.76.245:5678 (bypasses CORS)
       const response = await fetch('/api/n8n/webhook-test/06813544-ae56-4004-adbb-a99dd0ae562b');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
+      const rawData = await response.json();
       
-      setDashboardData(prev => ({
-        facility: data.facility || prev.facility,
-        candidate: data.candidate || prev.candidate
-      }));
+      // LOG THE RAW DATA so you can see exactly what n8n sends
+      console.log('🟢 RAW n8n Response:', JSON.stringify(rawData, null, 2));
+
+      const transformed = transformN8nData(rawData);
+      console.log('🔵 Transformed Data:', JSON.stringify(transformed, null, 2));
+
+      if (transformed) {
+        setDashboardData(prev => ({
+          facility: {
+            kpis: { ...prev.facility.kpis, ...transformed.kpis },
+            trendData: transformed.trendData || prev.facility.trendData,
+            sentimentData: transformed.sentimentData || prev.facility.sentimentData,
+            feed: transformed.feed || prev.facility.feed,
+          },
+          candidate: rawData.candidate ? {
+            kpis: { ...prev.candidate.kpis, ...(rawData.candidate.kpis || {}) },
+            trendData: rawData.candidate.trendData || prev.candidate.trendData,
+            sentimentData: rawData.candidate.sentimentData || prev.candidate.sentimentData,
+            feed: rawData.candidate.feed || prev.candidate.feed,
+          } : prev.candidate
+        }));
+        setSyncStatus('success');
+      } else {
+        console.warn('⚠️ Could not parse n8n data. Raw:', rawData);
+        setSyncStatus('error');
+      }
+      setLastSynced(new Date());
     } catch (err) {
-      console.error('Failed to fetch from n8n webhook. Using mock data.', err);
+      console.error('❌ Failed to fetch from n8n webhook:', err);
+      setSyncStatus('error');
+      setLastSynced(new Date());
     } finally {
       setIsFetching(false);
     }
@@ -209,12 +285,39 @@ export default function Dashboard() {
                 {isFetching ? 'Fetching...' : 'Sync with n8n'}
               </button>
 
-              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-full border border-emerald-100 dark:border-emerald-800/50 hidden sm:flex">
-                <div className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </div>
-                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">Live Engine Active</span>
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full border hidden sm:flex ${
+                syncStatus === 'success' 
+                  ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800/50' 
+                  : syncStatus === 'error'
+                  ? 'bg-red-50 dark:bg-red-900/30 border-red-100 dark:border-red-800/50'
+                  : 'bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50'
+              }`}>
+                {syncStatus === 'success' && (
+                  <>
+                    <div className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </div>
+                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">Synced</span>
+                  </>
+                )}
+                {syncStatus === 'error' && (
+                  <>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    <span className="text-xs font-semibold text-red-700 dark:text-red-400 tracking-wide uppercase">Sync Failed</span>
+                  </>
+                )}
+                {!syncStatus && (
+                  <>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-slate-400"></span>
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wide uppercase">Not Synced</span>
+                  </>
+                )}
+                {lastSynced && (
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-1">
+                    {lastSynced.toLocaleTimeString()}
+                  </span>
+                )}
               </div>
               <div className="pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-4">
                 <button
