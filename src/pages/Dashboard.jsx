@@ -150,7 +150,7 @@ export default function Dashboard() {
   const fetchN8nData = async () => {
     setIsFetching(true);
     try {
-      const response = await fetch('/api/n8n/webhook-test/06813544-ae56-4004-adbb-a99dd0ae562b');
+      const response = await fetch('/api/n8n/webhook/06813544-ae56-4004-adbb-a99dd0ae562b');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -238,7 +238,7 @@ export default function Dashboard() {
                 className="flex items-center gap-2 px-4 py-2 bg-brand-blue hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm disabled:opacity-50"
               >
                 <RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />
-                {isFetching ? 'Fetching...' : 'Sync with n8n'}
+                {isFetching ? 'Fetching...' : 'Data Sync'}
               </button>
 
               <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-full border border-emerald-100 dark:border-emerald-800/50 hidden sm:flex">
