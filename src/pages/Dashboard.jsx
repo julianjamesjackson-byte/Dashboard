@@ -124,6 +124,10 @@ const StatusBadge = ({ type, status }) => {
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('facility');
+  const [dashboardData, setDashboardData] = useState({
+    facility: facilityData,
+    candidate: candidateData
+  });
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -142,9 +146,37 @@ export default function Dashboard() {
     }
   }, [isDarkMode]);
 
+  useEffect(() => {
+    const fetchN8nData = async () => {
+      try {
+        // GET request to n8n webhook
+        const response = await fetch('http://2.25.76.245:5678/webhook-test/06813544-ae56-4004-adbb-a99dd0ae562b');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Merge fetched data into our dashboard state. 
+        // We assume n8n returns an object with 'facility' and/or 'candidate' keys that match our schema.
+        setDashboardData(prev => ({
+          facility: data.facility || prev.facility,
+          candidate: data.candidate || prev.candidate
+        }));
+      } catch (err) {
+        console.error('Failed to fetch from n8n webhook. Using mock data.', err);
+      }
+    };
+
+    fetchN8nData();
+    
+    // Optional: Poll every 30 seconds for live updates
+    // const interval = setInterval(fetchN8nData, 30000);
+    // return () => clearInterval(interval);
+  }, []);
+
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
-  const data = activeTab === 'facility' ? facilityData : candidateData;
+  const data = activeTab === 'facility' ? dashboardData.facility : dashboardData.candidate;
 
   const chartAxisColor = isDarkMode ? '#cbd5e1' : '#64748b';
   const chartGridColor = isDarkMode ? '#334155' : '#e2e8f0';
