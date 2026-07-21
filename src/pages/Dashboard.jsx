@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import { 
   Activity, Users, Building2, Mail, MailOpen, MessageSquareReply, 
-  CalendarCheck, ActivitySquare, AlertCircle, Clock, Sun, Moon
+  CalendarCheck, ActivitySquare, AlertCircle, Clock, Sun, Moon, RefreshCw
 } from 'lucide-react';
 
 const facilityData = {
@@ -124,6 +124,7 @@ const StatusBadge = ({ type, status }) => {
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('facility');
+  const [isFetching, setIsFetching] = useState(false);
   const [dashboardData, setDashboardData] = useState({
     facility: facilityData,
     candidate: candidateData
@@ -146,32 +147,29 @@ export default function Dashboard() {
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    const fetchN8nData = async () => {
-      try {
-        // GET request to n8n webhook
-        const response = await fetch('http://2.25.76.245:5678/webhook-test/06813544-ae56-4004-adbb-a99dd0ae562b');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        // Merge fetched data into our dashboard state. 
-        // We assume n8n returns an object with 'facility' and/or 'candidate' keys that match our schema.
-        setDashboardData(prev => ({
-          facility: data.facility || prev.facility,
-          candidate: data.candidate || prev.candidate
-        }));
-      } catch (err) {
-        console.error('Failed to fetch from n8n webhook. Using mock data.', err);
+  const fetchN8nData = async () => {
+    setIsFetching(true);
+    try {
+      // GET request to n8n webhook (Production URL)
+      const response = await fetch('http://2.25.76.245:5678/webhook/06813544-ae56-4004-adbb-a99dd0ae562b');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      const data = await response.json();
+      
+      setDashboardData(prev => ({
+        facility: data.facility || prev.facility,
+        candidate: data.candidate || prev.candidate
+      }));
+    } catch (err) {
+      console.error('Failed to fetch from n8n webhook. Using mock data.', err);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
+  useEffect(() => {
     fetchN8nData();
-    
-    // Optional: Poll every 30 seconds for live updates
-    // const interval = setInterval(fetchN8nData, 30000);
-    // return () => clearInterval(interval);
   }, []);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
@@ -202,13 +200,20 @@ export default function Dashboard() {
             </div>
             
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-full border border-emerald-100 dark:border-emerald-800/50">
+              <button 
+                onClick={fetchN8nData}
+                disabled={isFetching}
+                className="flex items-center gap-2 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 rounded-full border border-emerald-100 dark:border-emerald-800/50 transition-colors disabled:opacity-50 cursor-pointer"
+              >
                 <div className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className={`absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 ${isFetching ? 'animate-ping' : ''}`}></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                 </div>
-                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">Live Engine Active</span>
-              </div>
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">
+                  {isFetching ? 'Refreshing...' : 'Live Engine Active'}
+                </span>
+                <RefreshCw size={14} className={`text-emerald-600 dark:text-emerald-400 ml-1 ${isFetching ? 'animate-spin' : ''}`} />
+              </button>
               <div className="pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-4">
                 <button
                   onClick={toggleDarkMode}
