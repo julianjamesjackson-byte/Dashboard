@@ -203,17 +203,19 @@ export default function Dashboard() {
               <button 
                 onClick={fetchN8nData}
                 disabled={isFetching}
-                className="flex items-center gap-2 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 rounded-full border border-emerald-100 dark:border-emerald-800/50 transition-colors disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2 bg-brand-blue hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm disabled:opacity-50"
               >
+                <RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />
+                {isFetching ? 'Fetching...' : 'Sync with n8n'}
+              </button>
+
+              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-full border border-emerald-100 dark:border-emerald-800/50 hidden sm:flex">
                 <div className="relative flex h-3 w-3">
-                  <span className={`absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 ${isFetching ? 'animate-ping' : ''}`}></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                 </div>
-                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">
-                  {isFetching ? 'Refreshing...' : 'Live Engine Active'}
-                </span>
-                <RefreshCw size={14} className={`text-emerald-600 dark:text-emerald-400 ml-1 ${isFetching ? 'animate-spin' : ''}`} />
-              </button>
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">Live Engine Active</span>
+              </div>
               <div className="pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-4">
                 <button
                   onClick={toggleDarkMode}
