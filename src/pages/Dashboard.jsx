@@ -151,7 +151,7 @@ export default function Dashboard() {
     setIsFetching(true);
     try {
       // Uses proxy: /api/n8n -> http://2.25.76.245:5678 (bypasses CORS)
-      const response = await fetch('/api/n8n/webhook/06813544-ae56-4004-adbb-a99dd0ae562b');
+      const response = await fetch('/api/n8n/webhook-test/06813544-ae56-4004-adbb-a99dd0ae562b');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
