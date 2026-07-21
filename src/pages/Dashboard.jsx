@@ -150,8 +150,8 @@ export default function Dashboard() {
   const fetchN8nData = async () => {
     setIsFetching(true);
     try {
-      // GET request to n8n webhook (Production URL)
-      const response = await fetch('http://2.25.76.245:5678/webhook/06813544-ae56-4004-adbb-a99dd0ae562b');
+      // Uses proxy: /api/n8n -> http://2.25.76.245:5678 (bypasses CORS)
+      const response = await fetch('/api/n8n/webhook/06813544-ae56-4004-adbb-a99dd0ae562b');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
